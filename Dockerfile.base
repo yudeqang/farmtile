@@ -1,0 +1,17 @@
+# 动态瓦片服务基础镜像
+FROM gdal-python:2.3.2
+
+EXPOSE 6060
+
+RUN mkdir /farm_tile
+WORKDIR /farm_tile
+ENV PATH=$PATH:/usr/local/python3/bin
+
+ADD . /farm_tile
+
+RUN python3 -m pip install --no-cache-dir --trusted-host mirrors.aliyun.com -i http://mirrors.aliyun.com/pypi/simple/ --upgrade pip \
+    &&pip3 install --no-cache-dir --trusted-host mirrors.aliyun.com -i http://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+RUN mv /farm_tile/scripts/folium.py /usr/local/python3/lib/python3.7/site-packages/folium/
+
+
+#CMD ["gunicorn", "-c", "gunicorn_config.py", "-k", "uvicorn.workers.UvicornWorker", "app:app"]

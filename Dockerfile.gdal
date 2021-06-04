@@ -1,0 +1,39 @@
+FROM centos:7
+
+RUN mkdir /main
+WORKDIR /main
+
+ENV PATH=$PATH:/usr/local/bin:/usr/local/gdal/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/gdal/lib
+
+
+RUN yum -y install gcc \
+    yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel libffi-devel \
+    wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz \
+    tar -zxvf Python-3.7.0.tgz \
+    cd Python-3.7.0 \
+    mkdir /usr/local/python3 \
+    ./configure --prefix=/usr/local/python3 \
+    make && make install \
+    ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3 \
+    ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3
+
+
+RUN wget https://shuxiai.obs.cn-north-1.myhuaweicloud.com/proj-6.2.1.tar.gz \
+    tar -xzvf proj-6.2.1.tar.gz \
+    cd proj-6.2.1 \
+    ./configure \
+    make && make install
+
+RUN yum install -y make subversion libxml2-devel python-devel numpy swig expat-devel \
+    wget https://download.osgeo.org/gdal/2.4.2/gdal-2.4.2.tar.gz \
+    tar -xvzf gdal-2.4.2.tar.gz \
+    cd gdal-2.4.2.tar \
+    ./configure --prefix=/usr/local/gdal/  \
+    make && make install  \
+    pip3 install gdal==2.4.2 \
+    cd ../ \
+    rm -rf proj-6.2.1 gdal-2.4.2 Python-3.7.0 \
+    yum clean packages \
+    yum clean headers \
+    yum clean oldheaders
