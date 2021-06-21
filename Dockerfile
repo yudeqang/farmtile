@@ -1,5 +1,5 @@
 #动态瓦片服务发布镜像
-FROM tile-base
+FROM registry.cn-hangzhou.aliyuncs.com/shuxiydq/farm-tile:tilebase
 
 ADD . /farm_tile
 

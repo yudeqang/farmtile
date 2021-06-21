@@ -23,20 +23,27 @@ def save_byte2file(file_name, byte):
         f.write(byte)
 
 
-def cache_img_byte(url, formula="" ,bands="", rescale="",color_map="", hillshade="",
-        tile_type="", z="", x="", y="", ndvi=False, scale=1):
-    file_name = cal_file_name(url+formula+bands+rescale+color_map+hillshade+tile_type+str(x)+str(y)+str(z)+str(ndvi)+str(scale))
+def cache_img_byte(url, formula="", bands="", rescale="", color_map="", hillshade="",
+                   tile_type="", z="", x="", y="", ndvi=False, scale=1):
+    file_name = cal_file_name(
+        url + formula + bands + rescale + color_map + hillshade + tile_type + str(x) + str(y) + str(z) + str(
+            ndvi) + str(scale))
     file_name += '.png'
     file_name = os.path.join(CACHE_DIR, file_name)  # 拼接文件名
+
     if os.path.exists(file_name):
         with open(file_name, 'rb') as f:
             return f.read()
+
     img_byte = make_tile.get_tile(url, x=x, y=y, z=z, tile_type='orthophoto', ndvi=ndvi,
-                                    formula=formula, bands=bands, color_map=color_map, rescale=rescale)
+                                  formula=formula, bands=bands, color_map=color_map, rescale=rescale)
+
+    if int(z) > 20:  # 大于20层不缓存
+        return img_byte
+
     save_byte2file(file_name, img_byte)
     return img_byte
 
 
 if __name__ == '__main__':
     cal_file_name('test')
-
