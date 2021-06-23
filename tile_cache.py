@@ -24,6 +24,7 @@ def save_byte2file(file_name, byte):
 
 
 def handler_dir(url):
+    # 文件夹
     base = os.path.basename(url)
     path = os.path.join(CACHE_DIR, os.path.splitext(base)[0])
     if not os.path.exists(path):

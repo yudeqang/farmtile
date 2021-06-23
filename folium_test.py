@@ -11,6 +11,7 @@ from rio_tiler.mercator import get_zooms
 import numpy as np
 import folium
 import os
+from settings import PUBLISH
 
 data_path = '/disk_sdd/塔石正射整幅'
 
@@ -46,7 +47,7 @@ def render_html(location, tile_url, max_zoom, **kwargs):
     if tile_url.endswith('.tif'):
         t = os.path.basename(tile_url)
         tile_url = t[:-4]
-    tile_url = 'http://192.168.0.132:6060/tiles/%s/{x}/{y}/{z}' % tile_url
+    tile_url = 'http://%s/tiles/%s/{x}/{y}/{z}' % (PUBLISH, tile_url)
     m = folium.Map(location, tiles=tile_url,
                    attr='shuxiTech',
                    zoom_start=16,
