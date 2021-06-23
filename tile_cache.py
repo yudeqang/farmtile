@@ -23,13 +23,22 @@ def save_byte2file(file_name, byte):
         f.write(byte)
 
 
+def handler_dir(url):
+    base = os.path.basename(url)
+    path = os.path.join(CACHE_DIR, os.path.splitext(base)[0])
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
+
+
 def cache_img_byte(url, formula="", bands="", rescale="", color_map="", hillshade="",
                    tile_type="", z="", x="", y="", ndvi=False, scale=1):
     file_name = cal_file_name(
         url + formula + bands + rescale + color_map + hillshade + tile_type + str(x) + str(y) + str(z) + str(
             ndvi) + str(scale))
     file_name += '.png'
-    file_name = os.path.join(CACHE_DIR, file_name)  # 拼接文件名
+    cache_dir = handler_dir(url)
+    file_name = os.path.join(cache_dir, file_name)  # 拼接文件名
 
     if os.path.exists(file_name):
         with open(file_name, 'rb') as f:
